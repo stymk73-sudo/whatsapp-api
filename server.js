@@ -11,7 +11,6 @@ app.use(express.static(__dirname));
 let qrCodeData = '';
 let isClientReady = false;
 
-// WhatsApp Client Configuration
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
@@ -49,7 +48,6 @@ client.on('disconnected', () => {
 
 client.initialize();
 
-// QR code fetch karne ka route
 app.get('/get-qr', (req, res) => {
     if (isClientReady) {
         return res.json({ status: 'connected', qr: '' });
@@ -57,12 +55,10 @@ app.get('/get-qr', (req, res) => {
     res.json({ status: 'pending', qr: qrCodeData });
 });
 
-// Status check karne ka route
 app.get('/status', (req, res) => {
     res.json({ ready: isClientReady });
 });
 
-// Message bhejne wali API
 app.post('/api/send-message', async (req, res) => {
     if (!isClientReady) {
         return res.status(400).json({ status: 'error', message: 'WhatsApp connected nahi hai!' });
