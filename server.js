@@ -22,7 +22,6 @@ async function startWhatsApp() {
         logger: pino({ level: 'silent' })
     });
 
-    sock.udarstven = saveCreds;
     sock.ev.on('creds.update', saveCreds);
 
     sock.ev.on('connection.update', async (update) => {
@@ -54,7 +53,6 @@ async function startWhatsApp() {
 
 startWhatsApp();
 
-// Frontend ke liye QR code route
 app.get('/get-qr', (req, res) => {
     if (isConnected) {
         return res.json({ status: 'connected', qr: '' });
@@ -62,7 +60,6 @@ app.get('/get-qr', (req, res) => {
     res.json({ status: 'pending', qr: qrCodeData });
 });
 
-// Message bhejne ki API
 app.post('/api/send-message', async (req, res) => {
     if (!isConnected || !sock) {
         return res.status(400).json({ status: 'error', message: 'WhatsApp connected nahi hai!' });
