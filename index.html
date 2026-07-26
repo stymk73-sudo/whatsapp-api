@@ -30,18 +30,28 @@
             try {
                 let res = await fetch('/get-qr');
                 let data = await res.json();
+                
+                let qrBox = document.getElementById('qr-box');
+                let statusText = document.getElementById('status-text');
+                let apiInfo = document.getElementById('api-info');
+
                 if (data.status === 'connected') {
-                    document.getElementById('qr-box').innerHTML = '<h3>✅ WhatsApp Connected!</h3>';
-                    document.getElementById('status-text').innerText = 'Status: Connected';
-                    document.getElementById('status-text').className = 'status connected';
+                    qrBox.innerHTML = '<h3>✅ WhatsApp Connected!</h3>';
+                    statusText.innerText = 'Status: Connected';
+                    statusText.className = 'status connected';
                     document.getElementById('api-url').innerText = window.location.origin + '/api/send-message';
-                    document.getElementById('api-info').style.display = 'block';
+                    apiInfo.style.display = 'block';
                 } else if (data.qr) {
-                    document.getElementById('qr-box').innerHTML = `<img src="${data.qr}" alt="QR">`;
-                    document.getElementById('status-text').innerText = 'Status: Scan QR in WhatsApp';
-                    document.getElementById('status-text').className = 'status disconnected';
+                    qrBox.innerHTML = `<img src="${data.qr}" alt="QR">`;
+                    statusText.innerText = 'Status: Scan QR in WhatsApp';
+                    statusText.className = 'status disconnected';
+                } else {
+                    qrBox.innerHTML = '<p>QR generate ho raha hai...</p>';
+                    statusText.innerText = 'Status: Waiting for QR...';
                 }
-            } catch(e) {}
+            } catch(e) {
+                document.getElementById('status-text').innerText = 'Status: Server se connect nahi ho pa raha!';
+            }
         }
         setInterval(check, 3000);
         check();
